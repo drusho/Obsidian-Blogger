@@ -31,7 +31,7 @@ const posts = (await getCollection('blog'))
 							title={post.data.title}
 							description={post.data.description}
 							date={post.data.created_date}
-							slug={post.id}
+							slug={post.data.slug}
 						/>
 					))}
 				</div>

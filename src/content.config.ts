@@ -8,6 +8,30 @@ const dateSchema = z.preprocess((val) => {
 	return isNaN(date.getTime()) ? null : date;
 }, z.date().nullable().default(() => new Date()));
 
+// Helper function to generate URL-friendly slug
+function generateSlug(title: string): string {
+    return title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '')
+        .replace(/-+/g, '-');
+}
+
+// Custom slug schema that generates from title if not provided
+const slugSchema = z.string().optional().nullable().transform((val, ctx) => {
+    // If slug is provided, validate and clean it
+    if (val) {
+        const cleaned = val.toLowerCase()
+            .replace(/[^a-z0-9-]/g, '-')
+            .replace(/^-+|-+$/g, '')
+            .replace(/-+/g, '-');
+        return cleaned;
+    }
+    // If no slug, generate from title
+    const title = (ctx.parent as any).title;
+    return generateSlug(title);
+});
+
 const blog = defineCollection({
 	// Load Markdown and MDX files in the `src/content/blog/` directory.
 	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
@@ -21,7 +45,7 @@ const blog = defineCollection({
 		updated_date: dateSchema,
 		featured_image: z.string().optional().nullable(),
 		featured_image_alt: z.string().optional().nullable(),
-		slug: z.string().optional().nullable(),
+		slug: slugSchema,
 		tags: z.array(z.string()).default([]).nullable(),
 		// SEO specific fields
 		meta_title: z.string().optional().nullable(),

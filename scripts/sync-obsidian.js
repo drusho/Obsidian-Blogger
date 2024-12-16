@@ -3,6 +3,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import grayMatter from 'gray-matter';
 
+// Verify gray-matter is available
+if (!grayMatter) {
+    console.error('Error: gray-matter package is not available. Please run: npm install gray-matter');
+    process.exit(1);
+}
+
 // Configuration
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -79,7 +85,16 @@ function shouldPublishPost(frontmatter) {
 async function processMarkdownFile(filePath) {
     try {
         const content = await fs.readFile(filePath, 'utf8');
-        const { data: frontmatter, content: postContent } = grayMatter(content);
+        let frontmatter = {}, postContent = content;
+        
+        try {
+            const parsed = grayMatter(content);
+            frontmatter = parsed.data;
+            postContent = parsed.content;
+        } catch (parseError) {
+            console.error(`Error parsing frontmatter in ${filePath}:`, parseError);
+            return; // Skip this file if frontmatter parsing fails
+        }
         
         // Check if the post should be published
         if (shouldPublishPost(frontmatter)) {

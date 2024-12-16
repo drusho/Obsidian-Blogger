@@ -2,6 +2,7 @@
 title: SEO Implementation Guide for Obsidian Blogger
 description: 'Learn how SEO is implemented in Obsidian Blogger with detailed explanations of metadata, frontmatter, and technical optimizations.'
 publish: true
+slug: seo-implementation-guide
 created_date: 2024-01-20
 tags:
   - seo

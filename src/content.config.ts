@@ -8,28 +8,11 @@ const dateSchema = z.preprocess((val) => {
 	return isNaN(date.getTime()) ? null : date;
 }, z.date().nullable().default(() => new Date()));
 
-// Helper function to generate URL-friendly slug
-function generateSlug(str: string): string {
-    return str
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '')
-        .replace(/-+/g, '-');
-}
-
-// Custom slug schema that generates from title if not provided
-const slugSchema = z.preprocess((val) => {
-    if (typeof val === 'string') {
-        return generateSlug(val);
-    }
-    return val;
-}, z.string().default('untitled'));
-
 const blog = defineCollection({
 	// Load Markdown and MDX files in the `src/content/blog/` directory.
 	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
 	// Type-check frontmatter using a schema
-	schema: ({ image }) => z.object({
+	schema: z.object({
 		title: z.string(),
 		subtitle: z.string().optional().nullable(),
 		description: z.string().optional().nullable(),
@@ -38,7 +21,7 @@ const blog = defineCollection({
 		updated_date: dateSchema,
 		featured_image: z.string().optional().nullable(),
 		featured_image_alt: z.string().optional().nullable(),
-		slug: slugSchema,
+		slug: z.string().optional().nullable(),
 		tags: z.array(z.string()).default([]).nullable(),
 		// SEO specific fields
 		meta_title: z.string().optional().nullable(),

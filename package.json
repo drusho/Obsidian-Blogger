@@ -3,8 +3,8 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "NODE_ENV=development node scripts/sync-obsidian.js && astro dev",
-    "build": "NODE_ENV=production node scripts/sync-obsidian.js && astro build",
+    "dev": "node scripts/sync-obsidian.js && astro dev",
+    "build": "node scripts/sync-obsidian.js && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "sync": "node scripts/sync-obsidian.js"

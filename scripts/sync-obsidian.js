@@ -3,12 +3,6 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import grayMatter from 'gray-matter';
 
-// Verify gray-matter is available
-if (!grayMatter) {
-    console.error('Error: gray-matter package is not available. Please run: npm install gray-matter');
-    process.exit(1);
-}
-
 // Configuration
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -133,19 +127,5 @@ async function syncObsidianPosts() {
     }
 }
 
-// Function to run sync at regular intervals during development
-async function watchAndSync() {
-    // Initial sync
-    await syncObsidianPosts();
-    
-    // If in development mode (npm run dev), continue syncing
-    if (process.env.NODE_ENV === 'development') {
-        setInterval(async () => {
-            console.log('\n🔄 Running periodic sync...');
-            await syncObsidianPosts();
-        }, 500000); // Sync every 5 seconds
-    }
-}
-
-// Start the sync process
-watchAndSync(); 
+// Just run the sync once
+syncObsidianPosts(); 

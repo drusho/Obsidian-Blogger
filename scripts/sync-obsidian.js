@@ -118,8 +118,19 @@ async function syncObsidianPosts() {
     }
 }
 
-// Remove the watchAndSync function and directly run syncObsidianPosts
-syncObsidianPosts().catch(error => {
-    console.error('Sync failed:', error);
-    process.exit(1);
-}); 
+// Function to run sync at regular intervals during development
+async function watchAndSync() {
+    // Initial sync
+    await syncObsidianPosts();
+    
+    // If in development mode (npm run dev), continue syncing
+    if (process.env.NODE_ENV === 'development') {
+        setInterval(async () => {
+            console.log('\n🔄 Running periodic sync...');
+            await syncObsidianPosts();
+        }, 500000); // Sync every 5 seconds
+    }
+}
+
+// Start the sync process
+watchAndSync(); 

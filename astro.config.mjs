@@ -7,8 +7,8 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://beingpax.github.io',
-	base: '/Obsidian-Blogger/',
+	site: 'https://prakashjoshi.pages.dev',
+	base: '/',
 	integrations: [mdx(), sitemap(), tailwind()],
 	output: 'static',
 });

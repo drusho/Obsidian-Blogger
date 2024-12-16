@@ -9,8 +9,8 @@ const dateSchema = z.preprocess((val) => {
 }, z.date().nullable().default(() => new Date()));
 
 // Helper function to generate URL-friendly slug
-function generateSlug(title: string): string {
-    return title
+function generateSlug(str: string): string {
+    return str
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '')
@@ -18,25 +18,18 @@ function generateSlug(title: string): string {
 }
 
 // Custom slug schema that generates from title if not provided
-const slugSchema = z.string().optional().nullable().transform((val, ctx) => {
-    // If slug is provided, validate and clean it
-    if (val) {
-        const cleaned = val.toLowerCase()
-            .replace(/[^a-z0-9-]/g, '-')
-            .replace(/^-+|-+$/g, '')
-            .replace(/-+/g, '-');
-        return cleaned;
+const slugSchema = z.preprocess((val) => {
+    if (typeof val === 'string') {
+        return generateSlug(val);
     }
-    // If no slug, generate from title
-    const title = (ctx.parent as any).title;
-    return generateSlug(title);
-});
+    return val;
+}, z.string().default('untitled'));
 
 const blog = defineCollection({
 	// Load Markdown and MDX files in the `src/content/blog/` directory.
 	loader: glob({ base: './src/content/blog', pattern: '**/*.{md,mdx}' }),
 	// Type-check frontmatter using a schema
-	schema: z.object({
+	schema: ({ image }) => z.object({
 		title: z.string(),
 		subtitle: z.string().optional().nullable(),
 		description: z.string().optional().nullable(),

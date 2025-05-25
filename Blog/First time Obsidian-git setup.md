@@ -59,7 +59,7 @@ git push -u origin main
 1. Open Obsidian
 2. Go to Settings (gear icon)
 3. Select "Community plugins"
-4. Click "Browse" and search for "Obsidian Git"
+4. Click "Browse" and search for "Git" (previously "Obsidian Git")
 5. Install and enable the plugin
 
 ### Step 4: Configure Plugin Settings
